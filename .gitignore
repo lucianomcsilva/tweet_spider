@@ -1,8 +1,0 @@
-.vs_code/
-.env
-meta
-data
-data - Copia
-*.csv
-**/__pycache__
-*.old
