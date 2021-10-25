@@ -1,0 +1,23 @@
+{
+  // Use o IntelliSense para saber mais sobre os atributos possíveis.
+  // Focalizar para exibir as descrições dos atributos existentes.
+  // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.1.0",
+  "configurations": [
+    {
+      "name": "Python: Arquivo Atual",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: Launch Scrapy Spider",
+      "type": "python",
+      "request": "launch",
+      "module": "scrapy",
+      "args": ["runspider", "${file}", "-s _OVERRIDE_OUTPUT_FOLDER=True"],
+      "console": "integratedTerminal"
+    }
+  ]
+}
