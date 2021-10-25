@@ -83,6 +83,7 @@ class ParrotletSpider(scrapy.Spider):
         terms = [
                     #hbo max
                     ('hbomax',        'hbomax'), 
+                    ('hbo max',       'hbomax'), 
                     # Disney
                     ('disneyplus',    'disney+'), 
                     ('disney+',       'disney+'), 
@@ -95,11 +96,11 @@ class ParrotletSpider(scrapy.Spider):
                     # 'prime video'
                     ('amazon prime',  'primevideo'), 
                     ('primevideo',    'primevideo'),
+
                     #Politica - So para ter volume e testar a aplicação
-                    ('bolsonaro',    'Politica')
+                    # ('bolsonaro',    'Politica')
                 ]
-        terms = [('bolsonaro',    'Politica')]
-        #terms = ['hbomax'] #, 'disneyplus', 'disney+', 'netflix', 'star+', 'globoplay', 'amazon prime', 'primevideo']
+        # terms = [('bolsonaro',    'Politica')]
     
         for term in terms:           
             if(os.path.isfile(f'meta/{term[0]}.json')):
