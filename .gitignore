@@ -11,6 +11,8 @@ data
 *.old
 data - Copia
 *.csv
+*.json
+*.jl
 
 # Alguns arquivos que criei no inicio do projeto e que não sao mais importantes
 main.py
