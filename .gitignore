@@ -1,10 +1,18 @@
-.vscode
-.env
+# Dados do robo. Nao precisa ficar no repositorio
 meta
 data
+
+# Coisas boas de se ignorar =)
+.vscode
+.env
+**/__pycache__
+
+# Copias que eu faço no meu computador e ninguem precisa ter uma igual
+*.old
 data - Copia
 *.csv
-**/__pycache__
-*.old
+
+# Alguns arquivos que criei no inicio do projeto e que não sao mais importantes
 main.py
 tweepy.out
+get_all_tweets.py
