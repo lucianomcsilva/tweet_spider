@@ -6,3 +6,5 @@ data - Copia
 *.csv
 **/__pycache__
 *.old
+main.py
+tweepy.out
