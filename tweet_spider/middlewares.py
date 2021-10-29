@@ -150,7 +150,7 @@ class TweetSpiderDownloaderMiddleware:
         _newest_id = int(request.meta['newest_id'])
         #faz a busca usando a API autenticada no spider (evitar multiplas autenticação)
         api = spider.api
-        tweets = api.search_tweets(q=f'{_search}', lang='pt', geocode='-23.6640269,-46.6359077,25km', count=100, max_id=_oldest_id, since_id=_cold_newest_id)
+        tweets = api.search_tweets(q=f'{_search}', lang='pt', count=100, max_id=_oldest_id, since_id=_cold_newest_id)
 
         # Prepara o retorno
         real_response = dict()

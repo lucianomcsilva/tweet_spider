@@ -65,6 +65,7 @@ def create_dir(domain, override):
 
 class ParrotletSpider(scrapy.Spider):
     name = 'Parrotlet'
+    download_delay = 5    # (15 min  * 60 sec / 5 delay ) * 100 tweets/req = 18.000 (rate limit)
     # allowed_domains = ['twitter.com']
     # start_urls = ['http://twitter.com/']
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -142,11 +143,16 @@ class ParrotletSpider(scrapy.Spider):
             #Retornou tudo que podia, ir para proxima pagina
             if (json_response['returned_tweets'] == 100):
                 print_info(f"Retornado {json_response['returned_tweets']} / {json_response['total_returned_tweets']} tweets de {bcolors.BOLD} {json_response['search_term']} {bcolors.ENDC} para o periodo de  {json_response['newest_date']} a {json_response['oldest_date']}")
-                
-                # meta['newest_id'] = 1  #  Força o ID mais novo sendo 1.
+
+                # Continua coletando mais Tweets                
                 yield scrapy.Request(url=response.url, meta=meta, callback=self.parseTweet, dont_filter = True)                
             # Terminou 
             else:
+                #atualiza o ultimo ID salvo            
+                meta['cold_newest_id']    = meta['newest_id']
+                meta['cold_newest_date']  = meta['newest_date']
+
+                # Imprime o resultado em outra cor
                 print_sucess(f"Retornado {json_response['returned_tweets']} / {json_response['total_returned_tweets']} tweets de {bcolors.BOLD}  {json_response['search_term']} {bcolors.ENDC} para o periodo de  {json_response['newest_date']} a {json_response['oldest_date']}")                
         else:
             print_warning(f"Retornado {json_response['returned_tweets']} tweets de {bcolors.BOLD}  {json_response['search_term']} {bcolors.ENDC} sendo o mais antigo de {json_response['oldest_date']}")            
@@ -158,8 +164,5 @@ class ParrotletSpider(scrapy.Spider):
                 yield tweet
 
         #salva os metadados para consulta futura
-        with open(f"meta/{meta['search_term']}.json",'w', encoding='utf-8') as meta_file:
-            #atualiza o ultimo ID salvo
-            meta['cold_newest_id']    = meta['newest_id']
-            meta['cold_newest_date']  = meta['newest_date']
+        with open(f"meta/{meta['search_term']}.json",'w', encoding='utf-8') as meta_file:            
             json.dump(meta, meta_file, indent=4,sort_keys=True)        

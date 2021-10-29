@@ -5,6 +5,7 @@ data
 # Coisas boas de se ignorar =)
 .vscode
 .env
+ibm-credentials.env
 **/__pycache__
 
 # Copias que eu faço no meu computador e ninguem precisa ter uma igual
@@ -18,3 +19,7 @@ data - Copia
 main.py
 tweepy.out
 get_all_tweets.py
+.ipynb_checkpoints/
+*.ipynb
+Pipfile.lock
+Pipfile
