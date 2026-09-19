@@ -7,6 +7,8 @@ import os
 import pprint 
 import json
 import datetime
+import boto3
+import pandas as pd
 
 load_dotenv()
 consumer_key    = os.environ['TWITTER_APIKEY']
@@ -101,7 +103,14 @@ class ParrotletSpider(scrapy.Spider):
                     #Politica - So para ter volume e testar a aplicação
                     # ('bolsonaro',    'Politica')
                 ]
-        # terms = [('bolsonaro',    'Politica')]
+        terms = [
+            # ('bolsonaro',    'Politica'),
+            # ('ciro',    'Politica'),
+            # ('lula',    'Politica'),
+            # ('tebet',    'Politica'),
+            ('palmeiras',    'Futebol'),
+            # ('padre kelmon',    'Politica'),
+        ]
     
         for term in terms:           
             if(os.path.isfile(f'meta/{term[0]}.json')):
@@ -140,6 +149,33 @@ class ParrotletSpider(scrapy.Spider):
                  }  
 
         if(json_response['returned_tweets'] > 0):
+            #gravando no S3
+            client = boto3.client('s3')
+            #Json-line
+            response_s3 = client.put_object( 
+                Bucket='tweets2',
+                Body=' '.join(map(str, json_response['data'])),
+                Key=f"{meta['search_term']}.jl"
+            )     
+            #CSV
+            response_s3 = client.put_object( 
+                Bucket='tweets2',
+                Body=pd.DataFrame(json_response['data']).to_csv(index=False),
+                Key=f"{meta['search_term']}.csv"
+            )  
+            #JSON
+            response_s3 = client.put_object( 
+                Bucket='tweets2',
+                Body=pd.DataFrame(json_response['data']).T.to_json(),
+                Key=f"{meta['search_term']}.json"
+            )   
+            #Excel
+            # response_s3 = client.put_object( 
+            #     Bucket='tweets2',
+            #     Body=pd.DataFrame(json_response['data']).to_excel(index=False),
+            #     Key=f"{meta['search_term']}.xlsx"
+            # )                        
+            print(response_s3)          
             #Retornou tudo que podia, ir para proxima pagina
             if (json_response['returned_tweets'] == 100):
                 print_info(f"Retornado {json_response['returned_tweets']} / {json_response['total_returned_tweets']} tweets de {bcolors.BOLD} {json_response['search_term']} {bcolors.ENDC} para o periodo de  {json_response['newest_date']} a {json_response['oldest_date']}")
@@ -154,6 +190,8 @@ class ParrotletSpider(scrapy.Spider):
 
                 # Imprime o resultado em outra cor
                 print_sucess(f"Retornado {json_response['returned_tweets']} / {json_response['total_returned_tweets']} tweets de {bcolors.BOLD}  {json_response['search_term']} {bcolors.ENDC} para o periodo de  {json_response['newest_date']} a {json_response['oldest_date']}")                
+
+             
         else:
             print_warning(f"Retornado {json_response['returned_tweets']} tweets de {bcolors.BOLD}  {json_response['search_term']} {bcolors.ENDC} sendo o mais antigo de {json_response['oldest_date']}")            
 
